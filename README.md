@@ -10,6 +10,47 @@ Built using **AWS Bedrock**, **FAISS**, **Streamlit**, and **Docker**.
 This project demonstrates a **real-world GenAI architecture** used in modern data and ML platforms.
 
 ---
+flowchart LR
+
+%% =========================
+%% ADMIN INGESTION PIPELINE
+%% =========================
+subgraph ADMIN["Admin Processing (Ingestion Pipeline)"]
+    A1[Admin Uploads PDF]
+    A2[Document Loader<br/>(PyPDFLoader)]
+    A3[Text Chunking<br/>(RecursiveCharacterTextSplitter)]
+    A4[Titan Embedding Model<br/>(amazon.titan-embed-text-v2)]
+    A5[FAISS Vector Store]
+
+    A1 --> A2
+    A2 --> A3
+    A3 --> A4
+    A4 --> A5
+end
+
+%% =========================
+%% USER QUERY PIPELINE
+%% =========================
+subgraph USER["User Querying (RAG Pipeline)"]
+    U1[User Question]
+    U2[Titan Embedding Model<br/>(Query Embedding)]
+    U3[FAISS Similarity Search<br/>(Top-K Retrieval)]
+    U4[Prompt Construction<br/>(Question + Context)]
+    U5[LLM Inference<br/>(AWS Bedrock Converse)]
+    U6[Final Answer]
+
+    U1 --> U2
+    U2 --> U3
+    U3 --> U4
+    U4 --> U5
+    U5 --> U6
+end
+
+%% =========================
+%% SHARED COMPONENTS
+%% =========================
+A5 --> U3
+
 
 ## 🚀 Features
 
