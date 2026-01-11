@@ -1,0 +1,12 @@
+streamlit
+boto3
+pypdf
+faiss-cpu
+
+langchain
+langchain-core
+langchain-community
+langchain-aws
+langchain-text-splitters
+
+

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+
+# Streamlit
+.streamlit/
+
+# Docker
+*.log
+
+# AWS
+.aws/
+*.pem
+
+# Local files
+.DS_Store
+
+# FAISS / temp
+*.faiss
+*.pkl
+/tmp/
+
