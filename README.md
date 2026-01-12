@@ -1,7 +1,3 @@
-> **Use case:** Chat with PDFs using AWS Bedrock + FAISS + Streamlit
-
----
-
 # 📄 AI Summary Generator – Chat with PDFs using AWS Bedrock
 
 An end-to-end **Retrieval-Augmented Generation (RAG)** application that allows users to **upload PDFs and ask natural-language questions** about their content.
@@ -47,6 +43,132 @@ Answer (Grounded, No Hallucinations)
 This follows a **Retrieval-Augmented Generation (RAG)** pattern.
 
 ---
+---
+
+## 📂 Code Walkthrough: `admin.py` → `rag.py` → Multi-User (Per-User KB)
+
+This repository intentionally contains **multiple Python implementations** of the same RAG system to show how the solution evolves from a demo into a more production-ready architecture.
+
+---
+
+### ✅ 1) `admin.py` — Single PDF RAG (Fastest Demo)
+
+**Goal:** Get working RAG quickly with **one uploaded PDF** and an in-memory vector store.
+
+**What it does**
+- Upload **1 PDF**
+- Extract text using `PyPDFLoader`
+- Chunk text with `RecursiveCharacterTextSplitter`
+- Build FAISS index using Titan embeddings
+- Ask questions → retrieve top-K chunks → Bedrock `converse()` answer
+
+**Key design choices**
+- **FAISS stored in memory** in `st.session_state.vectorstore`
+- Resets when you click **Reset** or restart session
+- Best for validating:
+  - chunking
+  - embedding quality
+  - retrieval accuracy
+  - prompt grounding
+
+**Best used for**
+- Portfolio demo
+- quick testing
+- single document workflows
+
+---
+
+### ✅ 2) `rag.py` — Multi-PDF Knowledge Base (Persistent FAISS in S3)
+
+**Goal:** Move from “one PDF chat” to a real **knowledge base** that supports:
+- multi-PDF ingestion
+- incremental updates
+- persistence across restarts
+- shared KB (single index for the whole app)
+
+**What it adds on top of `admin.py`**
+✅ **Multiple PDFs ingestion**
+- Upload many PDFs at once (`accept_multiple_files=True`)
+- Or ingest PDFs already stored in S3 under a prefix (example: `docs/`)
+
+✅ **Persistence**
+- Saves FAISS to S3 as:
+  - `kb.faiss`
+  - `kb.pkl`
+- Loads it back from S3 on app start
+
+✅ **Incremental indexing**
+- Tracks already indexed PDFs using a **manifest**:
+  - `manifest.json` in S3
+- Only embeds “new” PDFs in the S3 prefix (avoids re-embedding)
+
+✅ UI becomes two tabs
+- **Tab 1:** Build/Update knowledge base
+- **Tab 2:** Chat with the KB
+
+**Tradeoff**
+- This is a **shared KB**.
+- If multiple users use the app, they all query the same index.
+
+**Best used for**
+- team-wide internal KB
+- single-tenant apps
+- demoing ingestion + persistence + incremental indexing
+
+---
+
+### ✅ 3) `multi_user.py` — Multi-User Private KB (Per-User FAISS in S3)
+
+**Goal:** Make the app safe for **multiple users** by isolating data:
+- User A’s PDFs never impact User B’s answers.
+
+This is required when deploying to **EC2/public access**.
+
+**What it changes vs `rag.py`**
+✅ **Per-user namespace**
+- Creates a stable `user_id` in Streamlit session state:
+  - `st.session_state.user_id = uuid4()`
+- Every user gets their own S3 path:
+
+
+✅ **Per-user manifest**
+- Each user tracks their own indexed sources
+- Prevents re-indexing the same PDFs for the same user
+- Avoids collisions between users
+
+✅ **Reset / Delete My KB**
+- Adds a third tab to delete *only that user’s* FAISS + manifest from S3
+
+**Why this matters for EC2**
+When deployed publicly:
+- multiple users may use the same app
+- without isolation, PDF content can leak across users
+- this version ensures privacy + correctness
+
+**Best used for**
+- EC2 deployment
+- multi-tenant SaaS-style apps
+- privacy-preserving doc chat
+
+---
+
+## 🔥 Summary: How each Python solution differs
+
+| File | Scope | PDF Support | FAISS Storage | Manifest | Users |
+|------|------|------------|--------------|----------|------|
+| `admin.py` | Demo | Single PDF | In-memory only | ❌ | Single session |
+| `rag.py` | Knowledge Base | Multi-PDF + S3 ingest | S3 (shared) | ✅ shared manifest | Single tenant (shared KB) |
+| `multi_user.py` | Production-like | Multi-PDF + S3 ingest | S3 (per user) | ✅ per-user manifest | ✅ Multi-user isolation |
+
+---
+
+## ✅ Recommended usage
+- Start with `admin.py` to validate RAG correctness quickly  
+- Use `rag.py` to build a persistent shared KB  
+- Use `multi_user.py` when deploying to EC2 or supporting multiple users safely  
+
+---
+
 
 ## 🧠 Vector Store: FAISS
 
