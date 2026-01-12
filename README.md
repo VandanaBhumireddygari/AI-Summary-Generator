@@ -5,6 +5,9 @@ Built using **AWS Bedrock**, **FAISS**, **Streamlit**, and **Docker**.
 
 This project demonstrates a **real-world GenAI architecture** used in modern data and ML platforms.
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f9f1ec68-fcca-4b31-bae7-e12a978d0a3e" />
+
+
 
 ## 🚀 Features
 
