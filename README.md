@@ -1,9 +1,9 @@
-# 📄 AI Summary Generator – Chat with PDFs using AWS Bedrock
+# 📄 RAG LLM – Chat with PDFs using AWS Bedrock
 
 An end-to-end **Retrieval-Augmented Generation (RAG)** application that allows users to **upload PDFs and ask natural-language questions** about their content.
 Built using **AWS Bedrock**, **FAISS**, **Streamlit**, and **Docker**.
 
-This project demonstrates a **real-world GenAI architecture** used in modern data and ML platforms.
+This project demonstrates a **real-world GenAI architecture** used in modern data and ML platforms. This app is not a chatbot, it’s a document expert.
 
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f9f1ec68-fcca-4b31-bae7-e12a978d0a3e" />
 
