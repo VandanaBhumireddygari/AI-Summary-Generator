@@ -20,7 +20,7 @@ This project demonstrates a **real-world GenAI architecture** used in modern dat
 
 ## 🏗️ Architecture Overview
 
-```
+
 PDF Upload
    ↓
 Text Extraction (PyPDFLoader)
@@ -102,7 +102,7 @@ docker run --rm \
   -v ~/.aws:/root/.aws \
   -p 8083:8083 \
   pdf-reader
-```
+
 
 Open in browser:
 
