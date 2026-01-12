@@ -1,42 +1,43 @@
-```md
 # 📄 AI Summary Generator – Chat with PDFs using AWS Bedrock
 
-A **production-style Retrieval-Augmented Generation (RAG)** application that allows users to upload PDFs and ask natural-language questions over their content.
+An end-to-end **Retrieval-Augmented Generation (RAG)** application that allows users to **upload PDFs and ask natural-language questions** about their content.
+Built using **AWS Bedrock**, **FAISS**, **Streamlit**, and **Docker**.
 
-Built using **AWS Bedrock, FAISS, Streamlit, Docker, and AWS EC2**, this project demonstrates an end-to-end **GenAI system with secure cloud infrastructure, persistence, and multi-user isolation**.
+This project demonstrates a **real-world GenAI architecture** used in modern data and ML platforms.
 
----
 
-## 🚀 Key Features
+## 🚀 Features
 
-- Upload and query PDF documents via web UI
-- Semantic search using vector embeddings
-- Context-grounded answers (reduced hallucinations)
-- Persistent FAISS indexes stored in Amazon S3
-- Incremental ingestion using manifest tracking
-- **Per-user isolated knowledge bases**
-- **Deployed on AWS EC2**
-- **IAM role-based secure access to Bedrock and S3**
-- Fully Dockerized for local and cloud deployment
-- Model-agnostic (swap Bedrock models via env vars)
+* Upload PDF documents via a web UI
+* Automatic text extraction and chunking
+* Semantic search using vector embeddings
+* Context-aware question answering
+* Uses **AWS Bedrock** for embeddings and LLM inference
+* Dockerized for easy local execution
+* Model-agnostic (swap models via environment variables)
 
 ---
 
-## 🏗️ Architecture (RAG Pattern)
+## 🏗️ Architecture Overview
 
 ```
-
-PDFs → Text Chunking → Embeddings → FAISS (S3)
-↑
+PDF Upload
+   ↓
+Text Extraction (PyPDFLoader)
+   ↓
+Text Chunking
+   ↓
+Embedding Generation (Amazon Titan)
+   ↓
+FAISS Vector Store
+   ↓
 User Question
-↓
-Top-K Retrieval
-↓
-AWS Bedrock (LLM)
-↓
-Grounded Answer
-
-````
+   ↓
+Similarity Search (Top-K Chunks)
+   ↓
+LLM (AWS Bedrock)
+   ↓
+Answer (Grounded, No Hallucinations)
 
 Pattern used: **Retrieval-Augmented Generation (RAG)**
 
